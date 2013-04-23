@@ -20,3 +20,7 @@ Given a simple [RESTful API](http://catfacts-api.appspot.com/doc.html), the foll
                     new RestRequest("facts")
                         .WithQueryParameter("number", 5)
                 );
+                
+## NuGet Package
+
+A NuGet package is available [here](https://nuget.org/packages/RestEasy/).
