@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>RestEasy</id>
-    <version>0.1.0.0</version>
+    <version>0.1.0.1</version>
     <title>RestEasy</title>
     <authors>Scott Meyer</authors>
     <owners>Scott Meyer</owners>
