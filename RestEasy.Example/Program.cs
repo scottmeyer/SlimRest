@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using RestEasy.Client;
 using RestEasy.Request;
 
@@ -22,6 +23,24 @@ namespace RestEasy.Example
                     new RestRequest("facts")
                         .WithQueryParameter("number", 5)
                 
+                );
+
+            Console.WriteLine("Retrieved " + response.Facts.Count + " cat facts.");
+            Console.WriteLine(response.Facts[0]);
+
+            Console.ReadKey();
+
+            QueryAsync().Wait();
+        }
+
+        async static Task QueryAsync()
+        {
+            var client = new RestClient("http://catfacts-api.appspot.com/api");
+
+            var response = await client.GetAsync<CatFactResponse>(
+                    new RestRequest("facts")
+                        .WithQueryParameter("number", 5)
+
                 );
 
             Console.WriteLine("Retrieved " + response.Facts.Count + " cat facts.");

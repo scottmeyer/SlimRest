@@ -157,6 +157,7 @@ namespace RestEasy.Client
                     {
                         case "text/json":
                         case "application/json":
+                        case "application/javascript":
                             result = await DeserializeJsonAsync<T>(responseStream);
                             break;
                         case "application/xml":
