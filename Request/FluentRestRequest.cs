@@ -15,5 +15,11 @@ namespace RestEasy.Request
             request.Headers[name] = value;
             return request;
         }
+
+        public static RestRequest WithQueryParameter(this RestRequest request, string name, object value)
+        {
+            request.RequestHandlers.Add(new UrlQueryParameter(name, value));
+            return request;
+        }
     }
 }
