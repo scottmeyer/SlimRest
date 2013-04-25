@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using RestEasy.Request.Handlers;
+using SlimRest.Request.Handlers;
 
-namespace RestEasy.Request
+namespace SlimRest.Request
 {
     public class RestRequest
     {
@@ -14,7 +14,7 @@ namespace RestEasy.Request
 
         internal List<IRestRequestHandler> RequestHandlers { get; set; }
         internal Dictionary<string, string> Headers { get; set; } 
-        internal RestRequest Apply()
+        internal virtual RestRequest Apply()
         {
             RequestHandlers.ForEach(x => x.Handle(this));
             return this;
@@ -30,7 +30,14 @@ namespace RestEasy.Request
         {
             
         }
+
+        public RestDataRequest(string url, T data)
+            :base(url)
+        {
+            Data = data;
+        }
             
         public T Data { get; set; }
+       
     }
 }

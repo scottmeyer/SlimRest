@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RestEasy.Request.Handlers
+namespace SlimRest.Request.Handlers
 {
     public class UrlParameterHandler : IRestRequestHandler
     {

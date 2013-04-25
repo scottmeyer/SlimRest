@@ -1,15 +1,18 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
-using RestEasy.Request;
+using SlimRest.Request;
 
-namespace RestEasy.Client
+namespace SlimRest.Client
 {
-    public abstract class RestWebClient
+    [DesignerCategory("")]
+    public abstract class RestWebClient : WebClient
     {
         protected RestWebClient(string baseUrl)
         {
@@ -20,7 +23,23 @@ namespace RestEasy.Client
         private string BaseUrl { get; set; }
         private string ContentType { get; set; }
 
-        public CookieContainer Cookies { get; set; }
+        private static WebRequest Trace(WebRequest request)
+        {
+            System.Diagnostics.Trace.WriteLine(
+                String.Format("RestClient Request - [{0}] {1}",
+                              request.Method,
+                              request.RequestUri));
+            return request;
+        }
+
+        private static WebResponse Trace(WebResponse response)
+        {
+            System.Diagnostics.Trace.WriteLine(
+                String.Format("RestClient Response - [{0}] {1}",
+                              ((HttpWebResponse)response).StatusCode,
+                              ((HttpWebResponse)response).StatusDescription));
+            return response;
+        }
 
         protected WebRequest BuildRequest(RestRequest request, string method)
         {
@@ -30,17 +49,26 @@ namespace RestEasy.Client
             if (webRequest != null)
             {
                 webRequest.Method = method;
+
                 foreach (var kvp in request.Headers)
                 {
                     webRequest.Headers[kvp.Key] = kvp.Value;
                 }
 
-                
+                foreach (var key in Headers.AllKeys)
+                {
+                    webRequest.Headers.Add(key, Headers[key]);
+                }
+
+                if (webRequest.RequestUri.IsLoopback)
+                {
+                    webRequest.Proxy = new WebProxy {Address = new Uri("http://localhost:8888")};
+                }
             }
 
-            return webRequest;
+            return Trace(webRequest);
         }
-
+        
         protected WebRequest BuildDataRequest<T>(RestDataRequest<T> request, string method)
         {
             var webRequest = BuildRequest(request, method);
@@ -106,24 +134,28 @@ namespace RestEasy.Client
             return await BuildDataRequestAsync(request, "PATCH");
         }
 
-        protected WebRequest GetWebRequest(Uri address)
+        protected override WebRequest GetWebRequest(Uri address)
         {
+            base.GetWebRequest(address);
             var request = WebRequest.Create(address);
             var webRequest = request as HttpWebRequest;
 
             if (webRequest != null)
             {
                 webRequest.ContentType = ContentType;
-                webRequest.CookieContainer = Cookies;
             }
+
             return webRequest;
+        }
+
+        protected virtual HttpStatusCode HandleResponse(WebResponse webResponse)
+        {
+            return ((HttpWebResponse)Trace(webResponse)).StatusCode;
         }
 
         protected virtual T HandleResponse<T>(WebResponse webResponse)
         {
-            var result = default(T);
-
-            using (var responseStream = webResponse.GetResponseStream())
+            using (var responseStream = Trace(webResponse).GetResponseStream())
             {
                 if (responseStream != null)
                 {
@@ -132,24 +164,37 @@ namespace RestEasy.Client
                         case "text/json":
                         case "application/json":
                         case "application/javascript":
-                            result = DeserializeJson<T>(responseStream);
-                            break;
+                            return DeserializeJson<T>(responseStream);
                         case "application/xml":
-                            result = DeserializeXml<T>(responseStream);
-                            break;
+                            return DeserializeXml<T>(responseStream);
+                        case "text/html":
+                            {
+                                try
+                                {
+                                    return DeserializeJson<T>(responseStream);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    return DeserializeXml<T>(responseStream);
+                                }
+                                catch { }
+
+                                throw new ArgumentException("Unable to parse content for text/html content.");
+                            }
                         default:
                             throw new ArgumentException("Unrecognized Content-Type: " + webResponse.ContentType);
                     }
                 }
             }
 
-            return result;
+            return default(T);
         }
 
         protected virtual async Task<T> HandleResponseAsync<T>(WebResponse webResponse)
         {
-            var result = default(T);
-            using (var responseStream = webResponse.GetResponseStream())
+            using (var responseStream = Trace(webResponse).GetResponseStream())
             {
                 if (responseStream != null)
                 {
@@ -158,19 +203,32 @@ namespace RestEasy.Client
                         case "text/json":
                         case "application/json":
                         case "application/javascript":
-                            result = await DeserializeJsonAsync<T>(responseStream);
-                            break;
+                            return await DeserializeJsonAsync<T>(responseStream);
                         case "application/xml":
-                            result = await DeserializeXmlAsync<T>(responseStream);
+                            return await DeserializeXmlAsync<T>(responseStream);
+                        case "text/html":
+                            {
+                                try
+                                {
+                                    return await DeserializeJsonAsync<T>(responseStream);
+                                }catch{}
 
-                            break;
+                                try
+                                {
+                                    return await DeserializeXmlAsync<T>(responseStream);
+                                }
+                                catch{}
+
+                                throw new ArgumentException("Unable to parse content for text/html content.");
+                            }
                         default:
                             throw new ArgumentException("Unrecognized Content-Type: " + webResponse.ContentType);
                     }
                 }
             }
 
-            return result;
+            return default(T);
+
         }
 
         protected virtual string ParseContentType(string contentType)
@@ -183,7 +241,7 @@ namespace RestEasy.Client
             using (var contentStream = new MemoryStream())
             {
                 jsonStream.CopyTo(contentStream);
-                var content = System.Text.Encoding.UTF8.GetString(contentStream.ToArray());
+                var content = Encoding.UTF8.GetString(contentStream.ToArray());
                 return JsonConvert.DeserializeObject<T>(content);
             }
         }
@@ -193,7 +251,7 @@ namespace RestEasy.Client
             using (var contentStream = new MemoryStream())
             {
                 await jsonStream.CopyToAsync(contentStream);
-                var content = System.Text.Encoding.UTF8.GetString(contentStream.ToArray());
+                var content = Encoding.UTF8.GetString(contentStream.ToArray());
                 return await JsonConvert.DeserializeObjectAsync<T>(content);
             }
         }
@@ -221,6 +279,5 @@ namespace RestEasy.Client
                 }
             });
         }
-
     }
 }

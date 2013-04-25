@@ -1,25 +1,36 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using RestEasy.Request;
+using SlimRest.Request;
 
-namespace RestEasy.Client
+namespace SlimRest.Client
 {
     public interface IRestClient
     {
         T Get<T>(RestRequest request);
         Task<T> GetAsync<T>(RestRequest request);
 
-        T Post<T>(RestRequest request);
-        Task<T> PostAsync<T>(RestRequest request);
-        T Post<T, TK>(RestDataRequest<TK> request);
+       T Post<T, TK>(RestDataRequest<TK> request);
         Task<T> PostAsync<T, TK>(RestDataRequest<TK> request);
 
+        HttpStatusCode Put<T>(RestDataRequest<T> request);
+        Task<HttpStatusCode> PutAsync<T>(RestDataRequest<T> request);
+        
         T Put<T, TK>(RestDataRequest<TK> request);
         Task<T> PutAsync<T, TK>(RestDataRequest<TK> request);
 
+
+        HttpStatusCode Delete(RestRequest request);
+        Task<HttpStatusCode> DeleteAsync(RestRequest request);
+
+        HttpStatusCode Delete<T>(RestDataRequest<T> request);
+        Task<HttpStatusCode> DeleteAsync<T>(RestDataRequest<T> request);
+        
         T Delete<T, TK>(RestDataRequest<TK> request);
         Task<T> DeleteAsync<T, TK>(RestDataRequest<TK> request);
 
+        HttpStatusCode Patch<T>(RestDataRequest<T> request);
+        Task<HttpStatusCode> PatchAsync<T>(RestDataRequest<T> request);
+        
         T Patch<T, TK>(RestDataRequest<TK> request);
         Task<T> PatchAsync<T, TK>(RestDataRequest<TK> request);
     }
@@ -45,22 +56,6 @@ namespace RestEasy.Client
                     await webRequest.GetResponseAsync());
         }
 
-        public T Post<T>(RestRequest request)
-        {
-            return HandleResponse<T>(
-                BuildRequest(request, WebRequestMethods.Http.Post)
-                .GetResponse()
-            );
-        }
-
-        public async Task<T> PostAsync<T>(RestRequest request)
-        {
-            return await HandleResponseAsync<T>(
-                    await BuildRequest(request, WebRequestMethods.Http.Post)
-                    .GetResponseAsync()
-            );
-        }
-
         public T Post<T, TK>(RestDataRequest<TK> request)
         {
             var webRequest = BuildPostRequest(request);
@@ -72,6 +67,18 @@ namespace RestEasy.Client
             var webRequest = await BuildPostRequestAsync(request);
             return await HandleResponseAsync<T>(
                     await webRequest.GetResponseAsync());
+        }
+
+        public HttpStatusCode Put<T>(RestDataRequest<T> request)
+        {
+            var webRequest = BuildPutRequest(request);
+            return HandleResponse(webRequest.GetResponse());
+        }
+
+        public async Task<HttpStatusCode> PutAsync<T>(RestDataRequest<T> request)
+        {
+            var webRequest = await BuildPutRequestAsync(request);
+            return HandleResponse(await webRequest.GetResponseAsync());
         }
 
         public T Put<T, TK>(RestDataRequest<TK> request)
@@ -87,6 +94,30 @@ namespace RestEasy.Client
                     await webRequest.GetResponseAsync());
         }
 
+        public HttpStatusCode Delete(RestRequest request)
+        {
+            var webRequest = BuildRequest(request, "DELETE");
+            return HandleResponse(webRequest.GetResponse());
+        }
+
+        public async Task<HttpStatusCode> DeleteAsync(RestRequest request)
+        {
+            var webRequest = BuildRequest(request, "DELETE");
+            return HandleResponse(await webRequest.GetResponseAsync());
+        }
+
+        public HttpStatusCode Delete<T>(RestDataRequest<T> request)
+        {
+            var webRequest = BuildDeleteRequest(request);
+            return HandleResponse(webRequest.GetResponse());
+        }
+
+        public async Task<HttpStatusCode> DeleteAsync<T>(RestDataRequest<T> request)
+        {
+            var webRequest = await BuildDeleteRequestAsync(request);
+            return HandleResponse(await webRequest.GetResponseAsync());
+        }
+
         public T Delete<T, TK>(RestDataRequest<TK> request)
         {
             var webRequest = BuildDeleteRequest(request);
@@ -98,6 +129,18 @@ namespace RestEasy.Client
             var webRequest = await BuildDeleteRequestAsync(request);
             return await HandleResponseAsync<T>(
                     await webRequest.GetResponseAsync());
+        }
+
+        public HttpStatusCode Patch<T>(RestDataRequest<T> request)
+        {
+            var webRequest = BuildPatchRequest(request);
+            return HandleResponse(webRequest.GetResponse());
+        }
+
+        public async Task<HttpStatusCode> PatchAsync<T>(RestDataRequest<T> request)
+        {
+            var webRequest = await BuildPatchRequestAsync(request);
+            return HandleResponse(await webRequest.GetResponseAsync());
         }
 
         public T Patch<T, TK>(RestDataRequest<TK> request)
