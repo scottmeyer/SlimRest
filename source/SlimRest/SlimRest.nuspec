@@ -2,8 +2,8 @@
 <package >
   <metadata>
     <id>SlimRest</id>
-    <version>0.1.0.2</version>
-    <title>RestEasy</title>
+    <version>1.0.0.0</version>
+    <title>SlimRest</title>
     <authors>Scott Meyer</authors>
     <owners>Scott Meyer</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>

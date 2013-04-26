@@ -1,7 +1,7 @@
 $keyfile = "$env:USERPROFILE\Dropbox\nuget-access-key.txt"
 $scriptpath = split-path -parent $MyInvocation.MyCommand.Path
-$nugetpath = resolve-path "$scriptpath/../lib/nuget/nuget.exe"
-$packagespath = resolve-path "$scriptpath/../build/packages"
+$nugetpath = resolve-path "$scriptpath/.nuget/nuget/nuget.exe"
+$packagespath = resolve-path "$scriptpath/source/SlimRest
 
 if(-not (test-path $keyfile)) {
   throw "Could not find the NuGet access key at $keyfile. If you're not Jeremy, you shouldn't be running this script!"
@@ -18,23 +18,20 @@ else {
   $packages | % { write-host $_.Name }
 
   # Ensure we haven't run this by accident.
-  $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "Uploads the packages."
-  $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", "Does not upload the packages."
+  $yes = New-Object System.Management.Automation.Host.ChoiceDescription "Yes", "Uploads the packages."
+  $no = New-Object System.Management.Automation.Host.ChoiceDescription "No", "Does not upload the packages."
   $options = [System.Management.Automation.Host.ChoiceDescription[]]($no, $yes)
   
   $result = $host.ui.PromptForChoice("Upload packages", "Do you want to upload the NuGet packages to the NuGet server?", $options, 0) 
   
-  # Cancelled
   if($result -eq 0) {
     "Upload aborted"
   }
-  # upload
   elseif($result -eq 1) {
     $packages | % { 
         $package = $_.Name
-        write-host "Uploading $package"
+        write-host "Uploading $package
         & $nugetpath push $package $key
-        write-host ""
     }
   }
   popd

@@ -1,4 +1,4 @@
-RestEasy
+SlimRest
 ========
 
 This client is a simple synchronous/asynchronous wrapper for making requests to RESTful APIs. It exposes basic `GET`, `POST`, `PUT`, `PATCH` and `DELETE` requests.
@@ -23,4 +23,4 @@ Given a simple [RESTful API](http://catfacts-api.appspot.com/doc.html), the foll
                 
 ## NuGet Package
 
-A NuGet package is available [here](https://nuget.org/packages/RestEasy/).
+A NuGet package is available [here](https://nuget.org/packages/SlimRest/).
