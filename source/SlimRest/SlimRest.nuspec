@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SlimRest</id>
-    <version>1.0.0.0</version>
+    <version>1.1.0.0</version>
     <title>SlimRest</title>
     <authors>Scott Meyer</authors>
     <owners>Scott Meyer</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/scottmeyer/SlimRest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple synchronous/asynchronous REST client for .Net</description>
-    <releaseNotes>Changed name because of existing RestEasy product.</releaseNotes>
+    <releaseNotes>The assembly is now signed.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>REST api client</tags>
   </metadata>

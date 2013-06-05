@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel;
+using System.Net;
 using System.Threading.Tasks;
 using SlimRest.Request;
 
@@ -35,6 +36,7 @@ namespace SlimRest.Client
         Task<T> PatchAsync<T, TK>(RestDataRequest<TK> request);
     }
 
+    [DesignerCategory("")]
     public class RestClient: RestWebClient, IRestClient
     {
         public RestClient(string baseUrl)
