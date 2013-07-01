@@ -203,19 +203,19 @@ namespace SlimRest.Client
                         case "text/json":
                         case "application/json":
                         case "application/javascript":
-                            return await DeserializeJsonAsync<T>(responseStream);
+                            return await DeserializeJsonAsync<T>(responseStream).ConfigureAwait(false);
                         case "application/xml":
-                            return await DeserializeXmlAsync<T>(responseStream);
+                            return await DeserializeXmlAsync<T>(responseStream).ConfigureAwait(false);
                         case "text/html":
                             {
                                 try
                                 {
-                                    return await DeserializeJsonAsync<T>(responseStream);
+                                    return await DeserializeJsonAsync<T>(responseStream).ConfigureAwait(false);
                                 }catch{}
 
                                 try
                                 {
-                                    return await DeserializeXmlAsync<T>(responseStream);
+                                    return await DeserializeXmlAsync<T>(responseStream).ConfigureAwait(false);
                                 }
                                 catch{}
 
@@ -250,9 +250,9 @@ namespace SlimRest.Client
         {
             using (var contentStream = new MemoryStream())
             {
-                await jsonStream.CopyToAsync(contentStream);
+                await jsonStream.CopyToAsync(contentStream).ConfigureAwait(false);
                 var content = Encoding.UTF8.GetString(contentStream.ToArray());
-                return await JsonConvert.DeserializeObjectAsync<T>(content);
+                return await JsonConvert.DeserializeObjectAsync<T>(content).ConfigureAwait(false);
             }
         }
 
