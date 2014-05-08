@@ -55,9 +55,7 @@ namespace SlimRest.Client
         {
             var webRequest = BuildRequest(request, WebRequestMethods.Http.Get);
             return await HandleResponseAsync<T>(
-                    await webRequest.GetResponseAsync()
-                    .ConfigureAwait(false))
-                    .ConfigureAwait(false);
+                    await webRequest.GetResponseAsync());
         }
 
         public T Post<T, TK>(RestDataRequest<TK> request)
@@ -70,9 +68,7 @@ namespace SlimRest.Client
         {
             var webRequest = await BuildPostRequestAsync(request);
             return await HandleResponseAsync<T>(
-                    await webRequest.GetResponseAsync()
-                    .ConfigureAwait(false))
-                    .ConfigureAwait(false);
+                    await webRequest.GetResponseAsync());
         }
 
         public HttpStatusCode Put<T>(RestDataRequest<T> request)
@@ -84,7 +80,7 @@ namespace SlimRest.Client
         public async Task<HttpStatusCode> PutAsync<T>(RestDataRequest<T> request)
         {
             var webRequest = await BuildPutRequestAsync(request);
-            return HandleResponse(await webRequest.GetResponseAsync().ConfigureAwait(false));
+            return HandleResponse(await webRequest.GetResponseAsync());
 
         }
 
@@ -98,9 +94,7 @@ namespace SlimRest.Client
         {
             var webRequest = await BuildPutRequestAsync(request);
             return await HandleResponseAsync<T>(
-                    await webRequest.GetResponseAsync()
-                    .ConfigureAwait(false))
-                    .ConfigureAwait(false);
+                    await webRequest.GetResponseAsync());
         }
 
         public HttpStatusCode Delete(RestRequest request)
@@ -112,7 +106,7 @@ namespace SlimRest.Client
         public async Task<HttpStatusCode> DeleteAsync(RestRequest request)
         {
             var webRequest = BuildRequest(request, "DELETE");
-            return HandleResponse(await webRequest.GetResponseAsync().ConfigureAwait(false));
+            return HandleResponse(await webRequest.GetResponseAsync());
         }
 
         public HttpStatusCode Delete<T>(RestDataRequest<T> request)
@@ -123,8 +117,8 @@ namespace SlimRest.Client
 
         public async Task<HttpStatusCode> DeleteAsync<T>(RestDataRequest<T> request)
         {
-            var webRequest = await BuildDeleteRequestAsync(request).ConfigureAwait(false);
-            return HandleResponse(await webRequest.GetResponseAsync().ConfigureAwait(false));
+            var webRequest = await BuildDeleteRequestAsync(request);
+            return HandleResponse(await webRequest.GetResponseAsync());
         }
 
         public T Delete<T, TK>(RestDataRequest<TK> request)
@@ -135,11 +129,9 @@ namespace SlimRest.Client
 
         public async Task<T> DeleteAsync<T, TK>(RestDataRequest<TK> request)
         {
-            var webRequest = await BuildDeleteRequestAsync(request).ConfigureAwait(false);
+            var webRequest = await BuildDeleteRequestAsync(request);
             return await HandleResponseAsync<T>(
-                    await webRequest.GetResponseAsync()
-                    .ConfigureAwait(false))
-                    .ConfigureAwait(false);
+                    await webRequest.GetResponseAsync());
         }
 
         public HttpStatusCode Patch<T>(RestDataRequest<T> request)
@@ -150,8 +142,8 @@ namespace SlimRest.Client
 
         public async Task<HttpStatusCode> PatchAsync<T>(RestDataRequest<T> request)
         {
-            var webRequest = await BuildPatchRequestAsync(request).ConfigureAwait(false);
-            return HandleResponse(await webRequest.GetResponseAsync().ConfigureAwait(false));
+            var webRequest = await BuildPatchRequestAsync(request);
+            return HandleResponse(await webRequest.GetResponseAsync());
 
         }
 
@@ -163,11 +155,9 @@ namespace SlimRest.Client
 
         public async Task<T> PatchAsync<T, TK>(RestDataRequest<TK> request)
         {
-            var webRequest = await BuildPatchRequestAsync(request).ConfigureAwait(false);
+            var webRequest = await BuildPatchRequestAsync(request);
             return await HandleResponseAsync<T>(
-                    await webRequest.GetResponseAsync()
-                    .ConfigureAwait(false))
-                    .ConfigureAwait(false);
+                    await webRequest.GetResponseAsync());
         }
     }
 }
