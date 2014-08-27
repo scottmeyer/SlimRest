@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>SlimRest</id>
-    <version>1.1.0.1</version>
+    <version>1.2.0.0</version>
     <title>SlimRest</title>
     <authors>Scott Meyer</authors>
     <owners>Scott Meyer</owners>
@@ -10,11 +10,11 @@
     <projectUrl>https://github.com/scottmeyer/SlimRest</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple synchronous/asynchronous REST client for .Net</description>
-    <releaseNotes>The assembly is now signed.</releaseNotes>
+    <releaseNotes>Updates to Newtonsoft.Json 6.0.4</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>REST api client</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="5.0.4" />
+      <dependency id="Newtonsoft.Json" version="6.0.4" />
     </dependencies>
   </metadata>
   <files>
