@@ -1,5 +1,6 @@
 SlimRest
 ========
+[![Build status](https://ci.appveyor.com/api/projects/status/kuawxdvb4myw7vge)](https://ci.appveyor.com/project/scottmeyer/slimrest)
 
 This client is a simple synchronous/asynchronous wrapper for making requests to RESTful APIs. It exposes basic `GET`, `POST`, `PUT`, `PATCH` and `DELETE` requests.
 
