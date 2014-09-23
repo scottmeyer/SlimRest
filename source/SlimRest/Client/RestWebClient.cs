@@ -87,7 +87,7 @@ namespace SlimRest.Client
             var webRequest = BuildRequest(request, method);
             using (var requestStream = new StreamWriter(webRequest.GetRequestStream()))
             {
-                var json = await JsonConvert.SerializeObjectAsync(request.Data);
+                var json = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(request.Data));
                 await requestStream.WriteAsync(json);
             }
 
@@ -252,7 +252,7 @@ namespace SlimRest.Client
             {
                 await jsonStream.CopyToAsync(contentStream);
                 var content = Encoding.UTF8.GetString(contentStream.ToArray());
-                return await JsonConvert.DeserializeObjectAsync<T>(content);
+                return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(content));
             }
         }
 
