@@ -14,10 +14,10 @@ namespace SlimRest.Client
     [DesignerCategory("")]
     public abstract class RestWebClient : WebClient
     {
-        protected RestWebClient(string baseUrl)
+        protected RestWebClient(string baseUrl, string contentType = "application/json")
         {
             BaseUrl = baseUrl;
-            ContentType = "application/json";
+            ContentType = contentType;
         }
 
         private string BaseUrl { get; set; }
