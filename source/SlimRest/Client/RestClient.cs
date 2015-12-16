@@ -39,8 +39,8 @@ namespace SlimRest.Client
     [DesignerCategory("")]
     public class RestClient: RestWebClient, IRestClient
     {
-        public RestClient(string baseUrl)
-            :base(baseUrl)
+        public RestClient(string baseUrl, string contentType = "application/json")
+            :base(baseUrl, contentType)
         {
 
         }
